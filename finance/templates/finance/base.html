@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+   <title>
+   {% block title %}
+    
+   {% endblock title %}
+    </title>
+</head>
+<body class="bg-gray-100">
+    <nav class="text-white p-4 bg-indigo-400">
+
+        
+        {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="mx-4">Dashboard</a>
+
+        <a href="{% url 'add_transaction' %}">Add Transaction</a>
+
+        <a href="{% url 'transaction_list' %}" class="ml-4">Transactions</a>
+
+        <a href="{% url 'goal_add' %}" class="ml-4">Add Goals</a>
+
+        
+            <form action="{% url 'logout' %}" id='logout-form' method='POST' style="display:inline;">
+            {% csrf_token %}
+            <a href="#" onclick="document.getElementById('logout-form').submit();" class=ml-4>Loguot</a>
+        </form>
+
+        {% else %}
+         <a href="{% url 'login' %}" class="ml-4">Login</a>
+        <a href="{% url 'register' %}" class="ml-4">Register</a>
+        {% endif %}
+            
+    </nav>
+
+    {% block content %}
+        
+    {% endblock content %}
+
+    
+    {% if messages %}
+        <div id='message-container' class="fixed top-5 left-1/2 transform -translate-x-1/2 w-96">
+            
+            {% for message in messages %}
+                <div class="bg-{{message.tags}}-500 text-white p-3 rounded shadow-md mb-2 bg-purple-700">
+                    message:{{message}}
+                </div>
+            {% endfor %}
+                
+            <script>
+                // automatically fade out messages after 5 seconds
+                setTimeout(function(){
+                    let messageContainer=document.getElementById('message-container');
+                    if (messageContainer){
+                        messageContainer.style.transition = "opacity 0.5s ease-out";
+                        messageContainer.style.opacity='0';
+                        setTimeout(()=>messageContainer.remove(),500);
+                        //Remove from dom
+                    }
+                },5000); //5
+                seconds
+            </script>
+        </div>
+    {% endif %}
+        
+        
+</body>
+</html>
